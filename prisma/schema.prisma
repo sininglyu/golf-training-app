@@ -1,0 +1,134 @@
+// Prisma schema for the golf training app
+// https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// ---------- Enums ----------
+
+enum SessionType {
+  golf
+  round
+  workout
+  recovery
+}
+
+// ---------- Models ----------
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  handicap  Float?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  weeklySessions  WeeklySession[]
+  rounds          ShotsGained[]
+  ghinCredential  GhinCredential?
+  handicapEntries HandicapEntry[]
+}
+
+model WeeklySession {
+  id              String      @id @default(cuid())
+  userId          String
+  user            User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type            SessionType
+  date            DateTime
+  plannedDuration Int // minutes
+  completed       Boolean     @default(false)
+  title           String?
+  focus           String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  log SessionLog?
+
+  @@index([userId, date])
+}
+
+model SessionLog {
+  id              String   @id @default(cuid())
+  sessionId       String   @unique
+  session         WeeklySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  notes           String?
+  actualDuration  Int? // minutes actually trained
+  rating          Int? // subjective 1-5
+
+  // Golf practice
+  practiced       String? // free-form: e.g. "Putting from 6-15ft, gate drill"
+  ballsHit        Int?
+
+  // Round
+  course          String?
+  score           Int?
+  shotsGainedId   String?  // optional link to a ShotsGained entry created during logging
+
+  // Workouts: JSON-encoded list of exercises ({name, sets, reps, weight?})
+  exercises       String?
+
+  // Legacy / structured data captured during a practice block
+  // ({name, reps, notes}[]) — kept for compatibility with seed data.
+  golfDrills      String?
+  shotsLogged     String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model ShotsGained {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date           DateTime
+  course         String
+  sgOffTee       Float
+  sgApproach     Float
+  sgAroundGreen  Float
+  sgPutting      Float
+  total          Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([userId, date])
+}
+
+// GHIN integration: stores AES-256-GCM encrypted password so we can re-auth
+// against the unofficial api2.ghin.com endpoint to refresh handicap data.
+// Plaintext credentials are never persisted.
+model GhinCredential {
+  id                  String   @id @default(cuid())
+  userId              String   @unique
+  user                User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  emailOrGhin         String
+  ghinNumber          String?
+  golferName          String?
+  encryptedPassword   String // base64 ciphertext (AES-256-GCM)
+  passwordIv          String // base64 IV
+  passwordAuthTag     String // base64 GCM auth tag
+  lastSyncedAt        DateTime?
+  lastError           String?
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+}
+
+// Append-only history of handicap index snapshots so we can chart trends.
+// `source` indicates whether the entry came from a GHIN sync or manual edit.
+model HandicapEntry {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  index       Float
+  lowIndex    Float?
+  source      String // "manual" | "ghin"
+  recordedAt  DateTime @default(now())
+  ghinSnapshot String? // optional JSON dump of the raw golfer payload
+
+  @@index([userId, recordedAt])
+}
