@@ -15,4 +15,16 @@ export const queryKeys = {
     all: ["dashboard"] as const,
     metrics: () => [...queryKeys.dashboard.all, "metrics"] as const,
   },
+  weeklyFocus: {
+    all: ["weeklyFocus"] as const,
+    week: (weekOf: string) => ["weeklyFocus", "week", weekOf] as const,
+  },
+  rounds: {
+    all: ["rounds"] as const,
+    list: () => [...queryKeys.rounds.all, "list"] as const,
+  },
+  goals: {
+    all: ["goals"] as const,
+    list: () => [...queryKeys.goals.all, "list"] as const,
+  },
 } as const;

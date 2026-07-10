@@ -21,6 +21,35 @@ function asNum(v: unknown, fallback = 0): number {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function serializeRound(r: {
+  id: string;
+  userId: string;
+  date: Date;
+  course: string;
+  sgOffTee: number;
+  sgApproach: number;
+  sgAroundGreen: number;
+  sgPutting: number;
+  total: number;
+}) {
+  return { ...r, date: r.date.toISOString() };
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const takeParam = Number(url.searchParams.get("take") ?? "20");
+  const take = Number.isFinite(takeParam) ? Math.min(Math.max(takeParam, 1), 100) : 20;
+
+  const userId = await getCurrentUserId();
+  const rounds = await prisma.shotsGained.findMany({
+    where: { userId },
+    orderBy: { date: "desc" },
+    take,
+  });
+
+  return NextResponse.json(rounds.map(serializeRound));
+}
+
 export async function POST(request: Request) {
   const body = (await request.json().catch(() => null)) as CreateBody | null;
   if (!body || typeof body !== "object") {
@@ -77,5 +106,5 @@ export async function POST(request: Request) {
     }
   }
 
-  return NextResponse.json(round, { status: 201 });
+  return NextResponse.json(serializeRound(round), { status: 201 });
 }

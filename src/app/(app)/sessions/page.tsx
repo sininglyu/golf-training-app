@@ -12,13 +12,7 @@ import {
   Target,
 } from "lucide-react";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LogSessionDialog } from "@/features/planner/components/log-session-dialog";
 import {
@@ -36,6 +30,14 @@ import {
   type SessionType,
 } from "@/types";
 
+// Per-type color config matching the session card palette
+const TYPE_COLOR: Record<SessionType, string> = {
+  golf: "#f59e0b",
+  round: "#22d3ee",
+  workout: "#fb7185",
+  recovery: "#60a5fa",
+};
+
 const TYPE_ICON: Partial<
   Record<SessionType, React.ComponentType<{ className?: string }>>
 > = {
@@ -45,15 +47,7 @@ const TYPE_ICON: Partial<
   recovery: HeartPulse,
 };
 
-const TYPE_ACCENT: Partial<Record<SessionType, string>> = {
-  golf: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
-  round: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
-  workout: "bg-orange-500/10 text-orange-600 dark:text-orange-400",
-  recovery: "bg-violet-500/10 text-violet-600 dark:text-violet-400",
-};
-
 const FALLBACK_ICON = CircleDot;
-const FALLBACK_ACCENT = "bg-muted text-muted-foreground";
 
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString(undefined, {
@@ -93,11 +87,16 @@ function ExerciseList({ exercises }: { exercises: ExerciseSet[] }) {
   return (
     <ul className="space-y-1 text-sm">
       {exercises.map((e, i) => (
-        <li key={`${e.name}-${i}`} className="flex items-baseline justify-between">
-          <span className="font-medium">{e.name || "Unnamed"}</span>
-          <span className="text-muted-foreground">
+        <li
+          key={`${e.name}-${i}`}
+          className="flex items-baseline justify-between"
+        >
+          <span className="font-semibold">{e.name || "Unnamed"}</span>
+          <span className="font-mono text-muted-foreground">
             {e.sets} × {e.reps}
-            {typeof e.weight === "number" && e.weight > 0 ? ` @ ${e.weight}` : ""}
+            {typeof e.weight === "number" && e.weight > 0
+              ? ` @ ${e.weight}`
+              : ""}
           </span>
         </li>
       ))}
@@ -165,25 +164,28 @@ export default function SessionsPage() {
   const roundMutation = useCreateRound();
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-start justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Session Logger
-          </h1>
-          <p className="text-sm text-muted-foreground">
-            Every session you&apos;ve marked complete, newest first.
-          </p>
+    <div className="mx-auto max-w-[880px] space-y-8">
+      {/* Page header */}
+      <div className="flex items-end justify-between">
+        <h1 className="text-[30px] font-black leading-none tracking-[-0.02em] text-foreground">
+          Logged Sessions
+        </h1>
+        <div className="flex items-center gap-2">
+          {collapsibleIds.length > 0 ? (
+            <Button type="button" variant="ghost" size="sm" onClick={toggleAll}>
+              {allCollapsed ? "Expand all" : "Collapse all"}
+            </Button>
+          ) : null}
+          <Button asChild size="sm" className="font-bold">
+            <Link href="/planner">Open Planner</Link>
+          </Button>
         </div>
-        <Button asChild>
-          <Link href="/planner">Open planner</Link>
-        </Button>
       </div>
 
       {isError ? (
-        <div className="rounded-md border border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive">
-          <div className="font-medium">Could not load your sessions.</div>
-          <div className="mt-1">
+        <div className="rounded-[9px] border border-negative/30 bg-negative/5 p-4 text-sm text-negative">
+          <div className="font-bold">Could not load your sessions.</div>
+          <div className="mt-1 text-negative/80">
             {error instanceof Error ? error.message : "Unknown error"}
           </div>
           <Button
@@ -198,63 +200,71 @@ export default function SessionsPage() {
         </div>
       ) : null}
 
-      <Card>
-        <CardHeader className="flex flex-row items-start justify-between gap-3 space-y-0">
-          <div>
-            <CardTitle>Recent sessions</CardTitle>
-            <CardDescription>
-              Completed sessions pulled from your planner log.
-            </CardDescription>
+      <Card className="overflow-hidden p-0">
+        {isLoading || !data ? (
+          <div className="space-y-0 divide-y divide-border">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-4 p-4">
+                <div className="h-12 w-12 animate-pulse rounded-[9px] bg-muted" />
+                <div className="flex-1 space-y-2">
+                  <div className="h-4 w-40 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-28 animate-pulse rounded bg-muted" />
+                </div>
+                <div className="h-4 w-12 animate-pulse rounded bg-muted" />
+              </div>
+            ))}
           </div>
-          {collapsibleIds.length > 0 ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              onClick={toggleAll}
-            >
-              {allCollapsed ? "Expand all" : "Collapse all"}
-            </Button>
-          ) : null}
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {isLoading || !data ? (
-            <>
-              <div className="h-20 animate-pulse rounded-md bg-muted" />
-              <div className="h-20 animate-pulse rounded-md bg-muted" />
-              <div className="h-20 animate-pulse rounded-md bg-muted" />
-            </>
-          ) : data.length === 0 ? (
-            <div className="rounded-md border border-dashed p-6 text-center text-sm text-muted-foreground">
+        ) : data.length === 0 ? (
+          <div className="flex flex-col items-center gap-3 py-12 text-center">
+            <p className="text-sm text-muted-foreground">
               No sessions logged yet. Plan some sessions and mark them complete
               to see them here.
-            </div>
-          ) : (
-            data.map((s) => {
+            </p>
+            <Button asChild size="sm" className="font-bold">
+              <Link href="/planner">Go to Planner</Link>
+            </Button>
+          </div>
+        ) : (
+          <div className="divide-y divide-border">
+            {data.map((s) => {
               const Icon = TYPE_ICON[s.type] ?? FALLBACK_ICON;
-              const accent = TYPE_ACCENT[s.type] ?? FALLBACK_ACCENT;
+              const typeColor = TYPE_COLOR[s.type];
               const typeLabel = SESSION_TYPE_LABELS[s.type] ?? s.type;
               const title = s.title || s.focus || typeLabel;
               const summary = summaryFor(s);
               const duration = s.log?.actualDuration ?? s.plannedDuration;
               const collapsible = hasDetails(s);
               const expanded = expandedIds.has(s.id);
-              const showDetails = collapsible && expanded;
               const headerId = `session-header-${s.id}`;
               const detailsId = `session-details-${s.id}`;
 
               return (
-                <div
-                  key={s.id}
-                  className="rounded-lg border transition-colors hover:bg-muted/40"
-                >
-                  <div className="flex items-start justify-between gap-3 p-4">
+                <div key={s.id} className="transition-colors hover:bg-accent/40">
+                  <div className="flex items-start gap-4 p-4">
+                    {/* Date block */}
+                    <div
+                      className="flex w-12 shrink-0 flex-col items-center rounded-[9px] py-2"
+                      style={{ background: `${typeColor}18` }}
+                    >
+                      <span
+                        className="font-mono text-[22px] font-bold leading-none"
+                        style={{ color: typeColor }}
+                      >
+                        {new Date(s.date).getDate()}
+                      </span>
+                      <span
+                        className="text-[9px] font-extrabold uppercase tracking-wider"
+                        style={{ color: typeColor }}
+                      >
+                        {new Date(s.date).toLocaleDateString(undefined, { month: "short" })}
+                      </span>
+                    </div>
+
+                    {/* Main content */}
                     <button
                       type="button"
                       id={headerId}
-                      onClick={() =>
-                        collapsible ? toggleExpanded(s.id) : undefined
-                      }
+                      onClick={() => collapsible && toggleExpanded(s.id)}
                       aria-expanded={collapsible ? expanded : undefined}
                       aria-controls={collapsible ? detailsId : undefined}
                       disabled={!collapsible}
@@ -265,43 +275,51 @@ export default function SessionsPage() {
                           : "cursor-default",
                       )}
                     >
-                      <span
-                        className={cn(
-                          "flex h-9 w-9 shrink-0 items-center justify-center rounded-md",
-                          accent,
-                        )}
-                      >
-                        <Icon className="h-4 w-4" />
-                      </span>
                       <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <div className="truncate text-sm font-medium">
-                            {title}
-                          </div>
-                          <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-emerald-500" />
+                          <span
+                            className="text-[9px] font-black uppercase tracking-[.08em]"
+                            style={{ color: typeColor }}
+                          >
+                            {typeLabel}
+                          </span>
+                          <CheckCircle2
+                            className="h-3 w-3 shrink-0"
+                            style={{ color: typeColor }}
+                          />
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {typeLabel} · {formatDate(s.date)} · {duration}m
-                          {s.log?.rating ? ` · ${s.log.rating}/5` : ""}
+                        <div className="mt-0.5 truncate text-[14px] font-bold text-foreground">
+                          {title}
                         </div>
                         {summary ? (
-                          <div className="mt-1.5 text-sm">{summary}</div>
+                          <div className="mt-0.5 text-[12px] text-muted-foreground">
+                            {summary}
+                          </div>
                         ) : null}
                       </div>
-                      {collapsible ? (
-                        <ChevronDown
-                          className={cn(
-                            "mt-1 h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                            expanded ? "rotate-180" : "",
-                          )}
-                          aria-hidden
-                        />
-                      ) : null}
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="font-mono text-[12px] font-semibold text-muted-foreground">
+                          {duration}m
+                          {s.log?.rating ? ` · ${s.log.rating}/5` : ""}
+                        </span>
+                        {collapsible ? (
+                          <ChevronDown
+                            className={cn(
+                              "h-4 w-4 text-muted-foreground transition-transform",
+                              expanded ? "rotate-180" : "",
+                            )}
+                            aria-hidden
+                          />
+                        ) : null}
+                      </div>
                     </button>
+
                     <Button
                       type="button"
                       size="sm"
                       variant="ghost"
+                      className="shrink-0 text-muted-foreground"
                       onClick={(e) => {
                         e.stopPropagation();
                         setEditSession(s);
@@ -311,12 +329,12 @@ export default function SessionsPage() {
                     </Button>
                   </div>
 
-                  {showDetails ? (
+                  {collapsible && expanded ? (
                     <div
                       id={detailsId}
                       role="region"
                       aria-labelledby={headerId}
-                      className="space-y-2 border-t px-4 pb-4 pt-3"
+                      className="space-y-2 border-t border-border px-4 pb-4 pt-3"
                     >
                       {s.type === "workout" && s.log?.exercises?.length ? (
                         <ExerciseList exercises={s.log.exercises} />
@@ -330,9 +348,9 @@ export default function SessionsPage() {
                   ) : null}
                 </div>
               );
-            })
-          )}
-        </CardContent>
+            })}
+          </div>
+        )}
       </Card>
 
       <LogSessionDialog

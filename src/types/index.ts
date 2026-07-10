@@ -81,3 +81,26 @@ export interface ProgressMetric {
   /** When true, the dashboard hides "vs last period" (point-in-time snapshots). */
   snapshot?: boolean;
 }
+
+export type GoalCategory = "general" | "ott" | "approach" | "shortgame" | "putting";
+export type GoalStatus = "active" | "achieved";
+
+export interface Goal {
+  id: string;
+  userId: string;
+  title: string;
+  description: string | null;
+  category: GoalCategory;
+  targetDate: string | null; // YYYY-MM-DD
+  status: GoalStatus;
+  createdAt: string; // ISO string
+  updatedAt: string;
+}
+
+export const GOAL_CATEGORY_LABELS: Record<GoalCategory, string> = {
+  general: "General",
+  ott: "Off the Tee",
+  approach: "Approach",
+  shortgame: "Short Game",
+  putting: "Putting",
+};

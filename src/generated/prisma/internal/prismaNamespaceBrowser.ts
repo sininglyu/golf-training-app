@@ -56,7 +56,9 @@ export const ModelName = {
   SessionLog: 'SessionLog',
   ShotsGained: 'ShotsGained',
   GhinCredential: 'GhinCredential',
-  HandicapEntry: 'HandicapEntry'
+  HandicapEntry: 'HandicapEntry',
+  WeeklyFocus: 'WeeklyFocus',
+  Goal: 'Goal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -167,6 +169,33 @@ export const HandicapEntryScalarFieldEnum = {
 } as const
 
 export type HandicapEntryScalarFieldEnum = (typeof HandicapEntryScalarFieldEnum)[keyof typeof HandicapEntryScalarFieldEnum]
+
+
+export const WeeklyFocusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  weekOf: 'weekOf',
+  text: 'text',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WeeklyFocusScalarFieldEnum = (typeof WeeklyFocusScalarFieldEnum)[keyof typeof WeeklyFocusScalarFieldEnum]
+
+
+export const GoalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  targetDate: 'targetDate',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof GoalScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -184,7 +184,7 @@ function SessionPill({
       )}
     >
       <GripVertical
-        className="h-3 w-3 shrink-0 text-muted-foreground/60 opacity-0 transition-opacity group-hover/pill:opacity-100"
+        className="h-3 w-3 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover/pill:opacity-100"
         aria-hidden
       />
       <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", dotClass)} />

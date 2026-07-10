@@ -1,82 +1,79 @@
 "use client";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { ShotsGainedSection } from "@/features/dashboard/components/shots-gained-section";
 import { useProgressMetrics } from "@/features/dashboard/hooks/use-progress-metrics";
+import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
   const { data, isLoading } = useProgressMetrics();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Progress</h1>
-        <p className="text-sm text-muted-foreground">
-          A snapshot of your game over the last 30 days.
+    <div className="mx-auto max-w-[1200px] space-y-8">
+      {/* Page header */}
+      <div className="space-y-1">
+        <p className="text-[11px] font-extrabold uppercase tracking-[.2em] text-primary">
+          Overview · Last 6 Rounds
         </p>
+        <h1 className="text-[30px] font-black leading-none tracking-[-0.02em] text-foreground">
+          Your Progress
+        </h1>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Metric grid */}
+      <div className="grid grid-cols-2 gap-[14px] sm:grid-cols-4">
         {isLoading || !data
           ? Array.from({ length: 8 }).map((_, i) => (
-              <Card key={i}>
-                <CardHeader>
-                  <CardDescription>Loading…</CardDescription>
-                  <CardTitle className="text-2xl">—</CardTitle>
-                </CardHeader>
+              <Card key={i} className="flex min-h-[138px] flex-col p-[18px]">
+                <div className="h-3 w-20 animate-pulse rounded bg-muted" />
+                <div className="mt-auto space-y-2">
+                  <div className="h-10 w-24 animate-pulse rounded bg-muted" />
+                  <div className="h-5 w-16 animate-pulse rounded bg-muted" />
+                </div>
               </Card>
             ))
-          : data.map((metric) => (
-              <Card key={metric.label}>
-                <CardHeader>
-                  <CardDescription>{metric.label}</CardDescription>
-                  <CardTitle className="text-2xl">
-                    {metric.value}
-                    {metric.unit ? (
-                      <span className="ml-1 text-sm font-normal text-muted-foreground">
-                        {metric.unit}
+          : data.map((metric) => {
+              const isPositive = metric.delta >= 0;
+              return (
+                <Card
+                  key={metric.label}
+                  className="flex min-h-[138px] flex-col p-[18px] transition-colors"
+                >
+                  <span className="text-[11px] font-extrabold uppercase tracking-[.13em] text-muted-foreground">
+                    {metric.label}
+                  </span>
+                  <div className="mt-auto">
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-mono text-[44px] font-semibold leading-none tracking-[-0.04em] text-foreground">
+                        {metric.value}
                       </span>
+                      {metric.unit ? (
+                        <span className="font-mono text-[17px] font-medium text-muted-foreground">
+                          {metric.unit}
+                        </span>
+                      ) : null}
+                    </div>
+                    {!metric.snapshot ? (
+                      <div className="mt-2 flex items-center gap-2">
+                        <span
+                          className={cn(
+                            "inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-mono text-[12px] font-bold",
+                            isPositive
+                              ? "bg-primary/[.14] text-positive"
+                              : "bg-destructive/[.14] text-negative",
+                          )}
+                        >
+                          {isPositive ? "▲" : "▼"} {Math.abs(metric.delta)}
+                        </span>
+                      </div>
                     ) : null}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {metric.snapshot ? (
-                    <span className="text-xs text-muted-foreground">
-                      Latest snapshot
-                    </span>
-                  ) : (
-                    <span
-                      className={
-                        metric.delta >= 0
-                          ? "text-xs font-medium text-primary"
-                          : "text-xs font-medium text-destructive"
-                      }
-                    >
-                      {metric.delta >= 0 ? "▲" : "▼"}{" "}
-                      {Math.abs(metric.delta)} vs last period
-                    </span>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                  </div>
+                </Card>
+              );
+            })}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent focus areas</CardTitle>
-          <CardDescription>
-            Charts and deeper trends will live here.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="text-sm text-muted-foreground">
-          Hook up real charts (e.g. Recharts) to <code>useProgressMetrics</code>.
-        </CardContent>
-      </Card>
+      <ShotsGainedSection />
     </div>
   );
 }

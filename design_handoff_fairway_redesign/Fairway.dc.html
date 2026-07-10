@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:#0a0a0a;}
+body{font-family:Archivo,-apple-system,sans-serif;-webkit-font-smoothing:antialiased;}
+input,button,textarea{font-family:inherit;outline:none;}
+input::placeholder,textarea::placeholder{color:#52525b;}
+::selection{background:#a3e635;color:#0a0a0a;}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+.fwrow .fwact{opacity:0;transition:opacity .12s;}
+.fwrow:hover .fwact{opacity:1;}
+.fwrow:hover{background:var(--rowhover);}
+.fwnav:hover{filter:brightness(1.25);}
+.fwsess:hover{transform:translateY(-2px);}
+.fwsess{transition:transform .12s;}
+*::-webkit-scrollbar{width:10px;height:10px;}
+*::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:8px;}
+*::-webkit-scrollbar-track{background:transparent;}
+</style>
+</helmet>
+
+<!-- LOOK + MODE TOGGLES -->
+<div style="position:fixed;top:18px;right:18px;z-index:120;display:flex;gap:10px;font-family:Archivo;">
+  <div style="display:flex;gap:4px;background:#000;border:1px solid #2a2a2a;border-radius:999px;padding:4px;box-shadow:0 8px 30px rgba(0,0,0,.6);">
+    <button onClick="{{ setDark }}" style="border:none;cursor:pointer;border-radius:999px;padding:7px 14px;font-size:11px;font-weight:800;letter-spacing:.08em;background:{{ modeTog.darkBg }};color:{{ modeTog.darkFg }};">DARK</button>
+    <button onClick="{{ setLight }}" style="border:none;cursor:pointer;border-radius:999px;padding:7px 14px;font-size:11px;font-weight:800;letter-spacing:.08em;background:{{ modeTog.lightBg }};color:{{ modeTog.lightFg }};">LIGHT</button>
+  </div>
+  <div style="display:flex;gap:4px;background:#000;border:1px solid #2a2a2a;border-radius:999px;padding:4px;box-shadow:0 8px 30px rgba(0,0,0,.6);">
+    <button onClick="{{ setLookA }}" style="border:none;cursor:pointer;border-radius:999px;padding:7px 16px;font-size:11px;font-weight:800;letter-spacing:.08em;background:{{ tog.aBg }};color:{{ tog.aFg }};">LOOK A</button>
+    <button onClick="{{ setLookB }}" style="border:none;cursor:pointer;border-radius:999px;padding:7px 16px;font-size:11px;font-weight:800;letter-spacing:.08em;background:{{ tog.bBg }};color:{{ tog.bFg }};">LOOK B</button>
+  </div>
+</div>
+
+<div style="--rowhover:{{ t.rowHover }};display:flex;min-height:100vh;background:{{ t.bg }};color:{{ t.text }};font-family:Archivo;">
+
+  <!-- SIDEBAR -->
+  <aside style="width:264px;flex:none;position:sticky;top:0;height:100vh;background:{{ t.sidebar }};border-right:1px solid {{ t.border }};display:flex;flex-direction:column;">
+    <div style="height:88px;display:flex;align-items:center;gap:11px;padding:0 26px;border-bottom:1px solid {{ t.border }};">
+      <div style="width:14px;height:14px;background:#a3e635;border-radius:{{ t.dotRadius }};box-shadow:0 0 16px rgba(163,230,53,.7);"></div>
+      <span style="font-size:19px;font-weight:900;letter-spacing:.16em;">FAIRWAY</span>
+    </div>
+    <nav style="display:flex;flex-direction:column;gap:5px;padding:18px 14px;flex:1;">
+      <button class="fwnav" onClick="{{ goPlanner }}" style="position:relative;display:flex;align-items:center;gap:13px;border:none;cursor:pointer;text-align:left;border-radius:{{ t.navRadius }};padding:12px 15px;font-size:14px;font-weight:700;overflow:hidden;background:{{ nav.planner.bg }};color:{{ nav.planner.fg }};">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#a3e635;opacity:{{ nav.planner.bar }};"></div>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="1.5" y="1.5" width="6" height="6" rx="1"/><rect x="10.5" y="1.5" width="6" height="6" rx="1"/><rect x="1.5" y="10.5" width="6" height="6" rx="1"/><rect x="10.5" y="10.5" width="6" height="6" rx="1"/></svg>
+        Weekly Planner
+      </button>
+      <button class="fwnav" onClick="{{ goSessions }}" style="position:relative;display:flex;align-items:center;gap:13px;border:none;cursor:pointer;text-align:left;border-radius:{{ t.navRadius }};padding:12px 15px;font-size:14px;font-weight:700;overflow:hidden;background:{{ nav.sessions.bg }};color:{{ nav.sessions.fg }};">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#a3e635;opacity:{{ nav.sessions.bar }};"></div>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="2" y1="4" x2="16" y2="4"/><line x1="2" y1="9" x2="16" y2="9"/><line x1="2" y1="14" x2="16" y2="14"/></svg>
+        Session Logger
+      </button>
+      <button class="fwnav" onClick="{{ goDashboard }}" style="position:relative;display:flex;align-items:center;gap:13px;border:none;cursor:pointer;text-align:left;border-radius:{{ t.navRadius }};padding:12px 15px;font-size:14px;font-weight:700;overflow:hidden;background:{{ nav.progress.bg }};color:{{ nav.progress.fg }};">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#a3e635;opacity:{{ nav.progress.bar }};"></div>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="1.5" y="9" width="4" height="7" rx="1"/><rect x="7" y="5" width="4" height="11" rx="1"/><rect x="12.5" y="2" width="4" height="14" rx="1"/></svg>
+        Progress
+      </button>
+      <button class="fwnav" onClick="{{ goSettings }}" style="position:relative;display:flex;align-items:center;gap:13px;border:none;cursor:pointer;text-align:left;border-radius:{{ t.navRadius }};padding:12px 15px;font-size:14px;font-weight:700;overflow:hidden;background:{{ nav.settings.bg }};color:{{ nav.settings.fg }};">
+        <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:#a3e635;opacity:{{ nav.settings.bar }};"></div>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7"><line x1="2" y1="5.5" x2="16" y2="5.5"/><circle cx="11.5" cy="5.5" r="2.3" fill="currentColor"/><line x1="2" y1="12.5" x2="16" y2="12.5"/><circle cx="6.5" cy="12.5" r="2.3" fill="currentColor"/></svg>
+        Settings
+      </button>
+    </nav>
+    <div style="padding:16px;border-top:1px solid {{ t.border }};">
+      <div style="display:flex;align-items:center;gap:12px;padding:11px 12px;border-radius:{{ t.cardRadius }};background:{{ t.surface }};border:1px solid {{ t.border }};">
+        <div style="width:36px;height:36px;flex:none;border-radius:{{ t.avatarRadius }};background:#a3e635;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;color:#0a0a0a;">JM</div>
+        <div style="display:flex;flex-direction:column;line-height:1.25;min-width:0;">
+          <span style="font-size:13px;font-weight:800;">Jordan Mills</span>
+          <span style="font-size:11px;color:{{ t.dim }};font-family:'JetBrains Mono',monospace;">HCP 8.4 · GHIN</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;">
+    <header style="height:64px;flex:none;border-bottom:1px solid {{ t.border }};display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;background:{{ t.headerBg }};backdrop-filter:blur(10px);z-index:30;">
+      <h1 style="margin:0;font-size:14px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;">{{ pageTitle }}</h1>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:{{ t.dim }};">
+        <span style="width:7px;height:7px;border-radius:50%;background:#a3e635;"></span>
+        <span style="font-family:'JetBrains Mono',monospace;">{{ todayStr }}</span>
+      </div>
+    </header>
+
+    <main style="flex:1;padding:32px;overflow-y:auto;">
+
+      <!-- ============ DASHBOARD ============ -->
+      <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+      <div style="max-width:1200px;">
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px;">
+          <div>
+            <div style="font-size:11px;font-weight:800;letter-spacing:.2em;color:{{ t.accentText }};text-transform:uppercase;margin-bottom:8px;">Overview · Last 6 Rounds</div>
+            <div style="font-size:30px;font-weight:900;letter-spacing:-.02em;">Your Progress</div>
+          </div>
+          <button onClick="{{ openAddRound }}" style="display:flex;align-items:center;gap:8px;border:none;cursor:pointer;background:#a3e635;color:#0a0a0a;font-weight:800;font-size:13px;letter-spacing:.02em;padding:11px 18px;border-radius:{{ t.btnRadius }};">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7.5" y1="2" x2="7.5" y2="13"/><line x1="2" y1="7.5" x2="13" y2="7.5"/></svg>
+            Add Round
+          </button>
+        </div>
+
+        <!-- METRICS -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:26px;">
+          <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="8">
+            <div style="position:relative;background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};padding:18px;min-height:138px;display:flex;flex-direction:column;overflow:hidden;">
+              <div style="position:absolute;left:0;top:0;bottom:0;width:{{ t.cardStripeW }};background:{{ t.cardStripeColor }};opacity:{{ t.cardStripeOp }};"></div>
+              <span style="font-size:11px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;color:{{ t.dim }};">{{ m.label }}</span>
+              <div style="display:flex;align-items:baseline;gap:4px;margin-top:auto;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:600;letter-spacing:-.04em;line-height:1;">{{ m.value }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:17px;font-weight:500;color:{{ t.dimmer }};">{{ m.unit }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+                <span style="display:inline-flex;align-items:center;gap:3px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;background:{{ m.chipBg }};color:{{ m.chipFg }};">{{ m.arrow }} {{ m.delta }}</span>
+                <span style="font-size:11px;color:{{ t.dimmer }};">{{ m.sub }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <!-- SG SECTION -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div style="display:flex;align-items:baseline;gap:12px;">
+            <span style="font-size:19px;font-weight:900;letter-spacing:-.01em;">Shots Gained</span>
+            <span style="font-size:12px;color:{{ t.dim }};">per round, baseline scratch</span>
+          </div>
+        </div>
+
+        <!-- SUMMARY STRIP -->
+        <sc-if value="{{ showSummary }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:stretch;background:{{ t.summaryBg }};border:1px solid {{ t.summaryBorder }};border-radius:{{ t.cardRadius }};margin-bottom:12px;overflow:hidden;">
+          <div style="display:flex;flex-direction:column;justify-content:center;padding:14px 22px;flex:none;border-right:1px solid {{ t.border }};">
+            <div style="font-size:11px;font-weight:900;letter-spacing:.13em;text-transform:uppercase;color:{{ t.accentText }};line-height:1.3;">6-Round<br>Average</div>
+          </div>
+          <sc-for list="{{ summary }}" as="s" hint-placeholder-count="5">
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:12px 8px;">
+              <span style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:{{ t.dim }};margin-bottom:5px;">{{ s.label }}</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:{{ s.color }};">{{ s.value }}</span>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <!-- TABLE -->
+        <div style="background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};overflow:hidden;">
+          <div style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1fr 1fr 64px;align-items:center;padding:0 18px;height:46px;border-bottom:1px solid {{ t.border }};background:{{ t.tableHead }};">
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:{{ t.dim }};">Round</span>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:{{ t.dim }};text-align:right;">Off Tee</span>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:{{ t.dim }};text-align:right;">Approach</span>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:{{ t.dim }};text-align:right;">Arnd Green</span>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:{{ t.dim }};text-align:right;">Putting</span>
+            <span style="font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:{{ t.accentText }};text-align:right;">Total</span>
+            <span></span>
+          </div>
+          <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+            <div class="fwrow" style="display:grid;grid-template-columns:2.4fr 1fr 1fr 1fr 1fr 1fr 64px;align-items:center;padding:0 18px;min-height:56px;border-bottom:1px solid {{ t.border }};">
+              <div style="display:flex;flex-direction:column;line-height:1.3;">
+                <span style="font-size:14px;font-weight:700;">{{ r.course }}</span>
+                <span style="font-size:11px;color:{{ t.dim }};font-family:'JetBrains Mono',monospace;">{{ r.date }}</span>
+              </div>
+              <!-- view cells -->
+              <sc-if value="{{ r.viewing }}" hint-placeholder-val="{{ true }}">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;color:{{ r.ottColor }};">{{ r.ottStr }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;color:{{ r.appColor }};">{{ r.appStr }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;color:{{ r.argColor }};">{{ r.argStr }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;color:{{ r.puttColor }};">{{ r.puttStr }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;text-align:right;color:{{ r.totalColor }};">{{ r.totalStr }}</span>
+                <div class="fwact" style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button onClick="{{ r.startEdit }}" title="Edit" style="border:none;cursor:pointer;background:{{ t.surface2 }};color:{{ t.dim }};width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9z"/></svg>
+                  </button>
+                  <button onClick="{{ r.del }}" title="Delete" style="border:none;cursor:pointer;background:{{ t.surface2 }};color:{{ t.neg }};width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="3" y1="3.5" x2="11" y2="3.5"/><path d="M4.5 3.5V2.5h5v1M4 3.5l.5 8h5l.5-8"/></svg>
+                  </button>
+                </div>
+              </sc-if>
+              <!-- edit cells -->
+              <sc-if value="{{ r.editing }}" hint-placeholder-val="{{ false }}">
+                <input value="{{ r.dOtt }}" onInput="{{ r.onOtt }}" style="background:{{ t.bg }};border:1px solid #a3e635;border-radius:6px;color:{{ t.text }};font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;padding:6px 8px;width:100%;">
+                <input value="{{ r.dApp }}" onInput="{{ r.onApp }}" style="background:{{ t.bg }};border:1px solid #a3e635;border-radius:6px;color:{{ t.text }};font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;padding:6px 8px;width:100%;">
+                <input value="{{ r.dArg }}" onInput="{{ r.onArg }}" style="background:{{ t.bg }};border:1px solid #a3e635;border-radius:6px;color:{{ t.text }};font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;padding:6px 8px;width:100%;">
+                <input value="{{ r.dPutt }}" onInput="{{ r.onPutt }}" style="background:{{ t.bg }};border:1px solid #a3e635;border-radius:6px;color:{{ t.text }};font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right;padding:6px 8px;width:100%;">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700;text-align:right;color:{{ t.accentText }};">{{ r.draftTotal }}</span>
+                <div style="display:flex;gap:4px;justify-content:flex-end;">
+                  <button onClick="{{ r.save }}" title="Save" style="border:none;cursor:pointer;background:#a3e635;color:#0a0a0a;width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M2.5 7.5l3 3 6-7"/></svg>
+                  </button>
+                  <button onClick="{{ r.cancel }}" title="Cancel" style="border:none;cursor:pointer;background:{{ t.surface2 }};color:{{ t.dim }};width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;">
+                    <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><line x1="3.5" y1="3.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="3.5" x2="3.5" y2="10.5"/></svg>
+                  </button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <button onClick="{{ openAddRound }}" style="display:flex;align-items:center;gap:8px;border:none;cursor:pointer;background:transparent;color:{{ t.dim }};font-weight:700;font-size:13px;padding:14px 18px;width:100%;text-align:left;">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><line x1="7" y1="2" x2="7" y2="12"/><line x1="2" y1="7" x2="12" y2="7"/></svg>
+            Add round
+          </button>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ PLANNER ============ -->
+      <sc-if value="{{ isPlanner }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:1280px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;gap:16px;">
+            <div style="display:flex;gap:3px;background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.btnRadius }};padding:3px;">
+              <button onClick="{{ setWeek }}" style="border:none;cursor:pointer;border-radius:{{ t.btnRadiusInner }};padding:7px 18px;font-size:13px;font-weight:800;background:{{ pv.weekBg }};color:{{ pv.weekFg }};">Week</button>
+              <button onClick="{{ setMonth }}" style="border:none;cursor:pointer;border-radius:{{ t.btnRadiusInner }};padding:7px 18px;font-size:13px;font-weight:800;background:{{ pv.monthBg }};color:{{ pv.monthFg }};">Month</button>
+            </div>
+            <span style="font-size:20px;font-weight:900;letter-spacing:-.01em;">{{ rangeLabel }}</span>
+          </div>
+          <button onClick="{{ openAddSession }}" style="display:flex;align-items:center;gap:8px;border:none;cursor:pointer;background:#a3e635;color:#0a0a0a;font-weight:800;font-size:13px;padding:11px 18px;border-radius:{{ t.btnRadius }};">
+            <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="7.5" y1="2" x2="7.5" y2="13"/><line x1="2" y1="7.5" x2="13" y2="7.5"/></svg>
+            Add Session
+          </button>
+        </div>
+
+        <!-- FOCUS BANNER -->
+        <div style="display:flex;align-items:center;gap:12px;background:{{ t.focusBg }};border:1px solid {{ t.focusBorder }};border-left:3px solid #a3e635;border-radius:{{ t.cardRadius }};padding:13px 18px;margin-bottom:18px;">
+          <span style="font-size:10px;font-weight:900;letter-spacing:.16em;text-transform:uppercase;color:{{ t.accentText }};flex:none;">Week Focus</span>
+          <sc-if value="{{ focusViewing }}" hint-placeholder-val="{{ true }}">
+            <span style="font-size:15px;font-weight:600;flex:1;">{{ focus }}</span>
+            <button class="fwact" onClick="{{ editFocus }}" style="border:none;cursor:pointer;background:transparent;color:{{ t.dim }};display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9z"/></svg>
+              Edit
+            </button>
+          </sc-if>
+          <sc-if value="{{ focusEditing }}" hint-placeholder-val="{{ false }}">
+            <input value="{{ focusDraft }}" onInput="{{ onFocusInput }}" onKeyDown="{{ onFocusKey }}" autoFocus="{{ true }}" style="flex:1;background:{{ t.bg }};border:1px solid #a3e635;border-radius:7px;color:{{ t.text }};font-size:15px;font-weight:600;padding:8px 12px;">
+            <button onClick="{{ saveFocus }}" style="border:none;cursor:pointer;background:#a3e635;color:#0a0a0a;font-weight:800;font-size:12px;padding:8px 14px;border-radius:7px;">Save</button>
+          </sc-if>
+        </div>
+
+        <!-- WEEK GRID -->
+        <sc-if value="{{ isWeek }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;">
+          <sc-for list="{{ week }}" as="d" hint-placeholder-count="7">
+            <div style="display:flex;flex-direction:column;background:{{ d.colBg }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};min-height:340px;overflow:hidden;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-bottom:1px solid {{ t.border }};">
+                <div style="display:flex;flex-direction:column;line-height:1.1;">
+                  <span style="font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:{{ d.dowColor }};">{{ d.dow }}</span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:600;color:{{ d.numColor }};">{{ d.num }}</span>
+                </div>
+                <span style="width:6px;height:6px;border-radius:50%;background:#a3e635;opacity:{{ d.todayDot }};"></span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:7px;padding:10px;flex:1;">
+                <sc-for list="{{ d.sessions }}" as="s" hint-placeholder-count="2">
+                  <button class="fwsess" onClick="{{ s.open }}" style="border:none;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:4px;background:{{ s.bg }};border-left:3px solid {{ s.color }};border-radius:{{ t.sessRadius }};padding:9px 11px;">
+                    <span style="font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:{{ s.textColor }};">{{ s.typeLabel }}</span>
+                    <span style="font-size:12.5px;font-weight:700;line-height:1.25;color:{{ t.text }};">{{ s.title }}</span>
+                    <span style="font-size:11px;color:{{ t.dim }};line-height:1.3;">{{ s.notes }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        </sc-if>
+
+        <!-- MONTH GRID -->
+        <sc-if value="{{ isMonth }}" hint-placeholder-val="{{ false }}">
+        <div style="background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};overflow:hidden;">
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid {{ t.border }};">
+            <sc-for list="{{ dowHeads }}" as="h" hint-placeholder-count="7">
+              <div style="text-align:center;padding:11px 0;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:{{ t.dim }};">{{ h }}</div>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);">
+            <sc-for list="{{ monthDays }}" as="m" hint-placeholder-count="35">
+              <div style="min-height:96px;border-right:1px solid {{ t.border }};border-bottom:1px solid {{ t.border }};padding:9px;display:flex;flex-direction:column;gap:6px;background:{{ m.bg }};">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:{{ m.numColor }};">{{ m.num }}</span>
+                <div style="display:flex;flex-wrap:wrap;gap:4px;">
+                  <sc-for list="{{ m.dots }}" as="dot" hint-placeholder-count="2">
+                    <span style="width:7px;height:7px;border-radius:2px;background:{{ dot }};"></span>
+                  </sc-for>
+                </div>
+                <span style="font-size:10px;color:{{ t.dim }};font-weight:700;margin-top:auto;">{{ m.countLabel }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      </sc-if>
+
+      <!-- ============ SESSIONS ============ -->
+      <sc-if value="{{ isSessions }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:880px;">
+        <div style="font-size:30px;font-weight:900;letter-spacing:-.02em;margin-bottom:20px;">Logged Sessions</div>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <sc-for list="{{ logged }}" as="l" hint-placeholder-count="5">
+            <div style="background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};padding:16px 18px;">
+              <div style="display:flex;align-items:center;gap:14px;">
+                <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:52px;flex:none;line-height:1;">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;">{{ l.day }}</span>
+                  <span style="font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};margin-top:3px;">{{ l.mon }}</span>
+                </div>
+                <div style="width:1px;height:36px;background:{{ t.border }};flex:none;"></div>
+                <div style="flex:1;min-width:0;">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:3px;">
+                    <span style="font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:{{ l.bg }};color:{{ l.textColor }};">{{ l.typeLabel }}</span>
+                    <span style="font-size:15px;font-weight:700;">{{ l.title }}</span>
+                  </div>
+                  <span style="font-size:12px;color:{{ t.dim }};">{{ l.drillLabel }}</span>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:{{ t.dim }};flex:none;">{{ l.duration }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      </sc-if>
+
+      <!-- ============ SETTINGS ============ -->
+      <sc-if value="{{ isSettings }}" hint-placeholder-val="{{ false }}">
+      <div style="max-width:680px;">
+        <div style="font-size:30px;font-weight:900;letter-spacing:-.02em;margin-bottom:20px;">Settings</div>
+        <div style="background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};padding:22px;margin-bottom:16px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+            <span style="font-size:16px;font-weight:800;">GHIN Integration</span>
+            <span style="font-size:9px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px;background:{{ t.posChipBg }};color:{{ t.accentText }};">Linked</span>
+          </div>
+          <p style="font-size:13px;color:{{ t.dim }};margin:0 0 16px;line-height:1.5;">Pull your handicap index automatically from GHIN.</p>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <input placeholder="GHIN Number" value="8842019" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;font-family:'JetBrains Mono',monospace;">
+            <input placeholder="Password" type="password" value="password" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;">
+            <button style="border:none;cursor:pointer;background:#a3e635;color:#0a0a0a;font-weight:800;font-size:13px;padding:11px;border-radius:8px;margin-top:4px;">Sync Handicap</button>
+          </div>
+        </div>
+        <div style="background:{{ t.surface }};border:1px solid {{ t.border }};border-radius:{{ t.cardRadius }};padding:22px;">
+          <div style="font-size:16px;font-weight:800;margin-bottom:4px;">Session Types</div>
+          <p style="font-size:13px;color:{{ t.dim }};margin:0 0 16px;line-height:1.5;">Color system used across the planner and logger.</p>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+            <sc-for list="{{ typeList }}" as="ty" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:11px;background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:9px;padding:11px 13px;">
+                <span style="width:14px;height:14px;border-radius:4px;background:{{ ty.color }};flex:none;box-shadow:0 0 10px {{ ty.glow }};"></span>
+                <span style="font-size:13px;font-weight:700;">{{ ty.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+      </sc-if>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============ DIALOG ============ -->
+<sc-if value="{{ dialogOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeDialog }}" style="position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.7);backdrop-filter:blur(3px);display:flex;align-items:center;justify-content:center;padding:24px;animation:fadeIn .15s ease;">
+  <div onClick="{{ stop }}" style="width:440px;max-width:100%;background:{{ t.dialogBg }};border:1px solid {{ t.borderHi }};border-radius:{{ t.cardRadius }};box-shadow:0 30px 80px rgba(0,0,0,.6);animation:popIn .2s ease;overflow:hidden;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 22px;border-bottom:1px solid {{ t.border }};">
+      <span style="font-size:17px;font-weight:900;letter-spacing:-.01em;">{{ dialogTitle }}</span>
+      <button onClick="{{ closeDialog }}" style="border:none;cursor:pointer;background:{{ t.surface2 }};color:{{ t.dim }};width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><line x1="3.5" y1="3.5" x2="10.5" y2="10.5"/><line x1="10.5" y1="3.5" x2="3.5" y2="10.5"/></svg>
+      </button>
+    </div>
+    <div style="padding:22px;display:flex;flex-direction:column;gap:14px;">
+      <!-- ROUND FORM -->
+      <sc-if value="{{ isRoundDialog }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Course</label>
+          <input value="{{ dlg.course }}" onInput="{{ onDlgCourse }}" placeholder="Pebble Beach GL" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Off Tee</label>
+            <input value="{{ dlg.ott }}" onInput="{{ onDlgOtt }}" placeholder="0.0" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;font-family:'JetBrains Mono',monospace;">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Approach</label>
+            <input value="{{ dlg.app }}" onInput="{{ onDlgApp }}" placeholder="0.0" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;font-family:'JetBrains Mono',monospace;">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Around Green</label>
+            <input value="{{ dlg.arg }}" onInput="{{ onDlgArg }}" placeholder="0.0" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;font-family:'JetBrains Mono',monospace;">
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;">
+            <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Putting</label>
+            <input value="{{ dlg.putt }}" onInput="{{ onDlgPutt }}" placeholder="0.0" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;font-family:'JetBrains Mono',monospace;">
+          </div>
+        </div>
+      </sc-if>
+      <!-- SESSION FORM -->
+      <sc-if value="{{ isSessionDialog }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Title</label>
+          <input value="{{ dlg.title }}" onInput="{{ onDlgTitle }}" placeholder="e.g. 50 wedges from 80yds" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;">
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Type</label>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;">
+            <sc-for list="{{ typePicker }}" as="tp" hint-placeholder-count="6">
+              <button onClick="{{ tp.pick }}" style="border:1px solid {{ tp.border }};cursor:pointer;background:{{ tp.bg }};color:{{ tp.fg }};border-radius:7px;padding:8px 6px;font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;justify-content:center;">
+                <span style="width:9px;height:9px;border-radius:3px;background:{{ tp.color }};flex:none;"></span>{{ tp.short }}
+              </button>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <label style="font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:{{ t.dim }};">Notes</label>
+          <textarea value="{{ dlg.notes }}" onInput="{{ onDlgNotes }}" placeholder="Optional" rows="2" style="background:{{ t.bg }};border:1px solid {{ t.border }};border-radius:8px;color:{{ t.text }};font-size:14px;padding:11px 13px;resize:none;"></textarea>
+        </div>
+      </sc-if>
+    </div>
+    <div style="display:flex;gap:10px;padding:0 22px 22px;">
+      <button onClick="{{ closeDialog }}" style="flex:1;border:1px solid {{ t.border }};cursor:pointer;background:transparent;color:{{ t.text }};font-weight:800;font-size:13px;padding:12px;border-radius:8px;">Cancel</button>
+      <button onClick="{{ submitDialog }}" style="flex:1;border:none;cursor:pointer;background:#a3e635;color:#0a0a0a;font-weight:800;font-size:13px;padding:12px;border-radius:8px;">{{ dialogCta }}</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+const TYPES = {
+  range:  { label:'Driving Range',   short:'Range',   color:'#f59e0b', text:'#b45309' },
+  short:  { label:'Short Game',      short:'Short',   color:'#a3e635', text:'#4d7c0f' },
+  round:  { label:'On-Course Round', short:'Round',   color:'#22d3ee', text:'#0e7490' },
+  putt:   { label:'Putting Practice',short:'Putting', color:'#c084fc', text:'#7e22ce' },
+  fit:    { label:'Fitness / Gym',   short:'Fitness', color:'#fb7185', text:'#be123c' },
+  mental: { label:'Mental Game',     short:'Mental',  color:'#60a5fa', text:'#1d4ed8' },
+};
+function hexA(hex, a){ const n=parseInt(hex.slice(1),16); const r=(n>>16)&255,g=(n>>8)&255,b=n&255; return `rgba(${r},${g},${b},${a})`; }
+function fmtSg(v){ return (v>0?'+':'') + v.toFixed(1); }
+
+class Component extends DCLogic {
+  state = {
+    look:'A', mode:'dark', page:'dashboard', plannerView:'week',
+    focus:'Shorten the backswing — feel connected through impact', focusEditing:false, focusDraft:'',
+    editingRowId:null, draft:null,
+    dialog:null, dlg:{},
+    rounds:[
+      { id:1, date:'Jun 14', course:'Pebble Beach GL', ott:1.8, app:2.4, arg:-0.6, putt:1.1 },
+      { id:2, date:'Jun 07', course:'Spyglass Hill',    ott:0.9, app:-1.2, arg:0.4, putt:2.3 },
+      { id:3, date:'May 30', course:'Pacific Grove',     ott:2.1, app:1.6, arg:1.2, putt:-0.8 },
+      { id:4, date:'May 22', course:'Poppy Hills',       ott:-0.4, app:3.1, arg:0.2, putt:1.4 },
+      { id:5, date:'May 15', course:'Bayonet Black',     ott:1.2, app:0.8, arg:-1.1, putt:0.6 },
+      { id:6, date:'May 08', course:'Pebble Beach GL',   ott:0.3, app:1.9, arg:0.9, putt:1.8 },
+    ],
+    nextId:7,
+  };
+
+  setState2(p){ this.setState(p); }
+  // nav + look
+  goDashboard=()=>this.setState({page:'dashboard'});
+  goPlanner=()=>this.setState({page:'planner'});
+  goSessions=()=>this.setState({page:'sessions'});
+  goSettings=()=>this.setState({page:'settings'});
+  setLookA=()=>this.setState({look:'A'});
+  setLookB=()=>this.setState({look:'B'});
+  setDark=()=>this.setState({mode:'dark'});
+  setLight=()=>this.setState({mode:'light'});
+  setWeek=()=>this.setState({plannerView:'week'});
+  setMonth=()=>this.setState({plannerView:'month'});
+
+  // focus
+  editFocus=()=>this.setState({focusEditing:true, focusDraft:this.state.focus});
+  onFocusInput=(e)=>this.setState({focusDraft:e.target.value});
+  saveFocus=()=>this.setState({focus:this.state.focusDraft||this.state.focus, focusEditing:false});
+  onFocusKey=(e)=>{ if(e.key==='Enter') this.saveFocus(); if(e.key==='Escape') this.setState({focusEditing:false}); };
+
+  // row edit
+  startEdit=(id)=>{ const r=this.state.rounds.find(x=>x.id===id); this.setState({editingRowId:id, draft:{ott:String(r.ott),app:String(r.app),arg:String(r.arg),putt:String(r.putt)}}); };
+  cancelEdit=()=>this.setState({editingRowId:null, draft:null});
+  changeDraft=(f,v)=>this.setState({draft:{...this.state.draft,[f]:v}});
+  saveRow=(id)=>{ const d=this.state.draft; const num=(x)=>{const n=parseFloat(x);return isNaN(n)?0:n;}; this.setState({rounds:this.state.rounds.map(r=>r.id===id?{...r,ott:num(d.ott),app:num(d.app),arg:num(d.arg),putt:num(d.putt)}:r), editingRowId:null, draft:null}); };
+  delRow=(id)=>this.setState({rounds:this.state.rounds.filter(r=>r.id!==id), editingRowId:null});
+
+  // dialog
+  openAddRound=()=>this.setState({dialog:'round', dlg:{course:'',ott:'',app:'',arg:'',putt:''}});
+  openAddSession=()=>this.setState({dialog:'session', dlg:{title:'',type:'range',notes:''}});
+  closeDialog=()=>this.setState({dialog:null});
+  stop=(e)=>e.stopPropagation();
+  setDlg=(f,v)=>this.setState({dlg:{...this.state.dlg,[f]:v}});
+  submitDialog=()=>{
+    if(this.state.dialog==='round'){
+      const d=this.state.dlg; const num=(x)=>{const n=parseFloat(x);return isNaN(n)?0:n;};
+      const today=new Date(); const mo=today.toLocaleString('en-US',{month:'short'}); const day=String(today.getDate()).padStart(2,'0');
+      const nr={id:this.state.nextId, date:`${mo} ${day}`, course:d.course||'New Round', ott:num(d.ott),app:num(d.app),arg:num(d.arg),putt:num(d.putt)};
+      this.setState({rounds:[nr,...this.state.rounds], nextId:this.state.nextId+1, dialog:null});
+    } else { this.setState({dialog:null}); }
+  };
+
+  theme(){
+    const lookB = this.state.look==='B';
+    const light = this.state.mode==='light';
+    // structural tokens depend on the LOOK
+    const struct = lookB ? {
+      cardRadius:'4px', btnRadius:'4px', btnRadiusInner:'3px', navRadius:'4px', sessRadius:'4px',
+      dotRadius:'1px', avatarRadius:'4px', cardStripeW:'4px', cardStripeOp:'1',
+    } : {
+      cardRadius:'13px', btnRadius:'10px', btnRadiusInner:'8px', navRadius:'9px', sessRadius:'9px',
+      dotRadius:'3px', avatarRadius:'50%', cardStripeW:'3px', cardStripeOp:'0',
+    };
+    // accent + status colors depend on the MODE (darker lime/rose for light-mode contrast)
+    const accent = light ? {
+      accentText:'#4d7c0f', pos:'#4d7c0f', neg:'#be123c',
+      posChipBg:hexA('#a3e635',.22), negChipBg:hexA('#fb7185',.18),
+      cardStripeColor: lookB ? '#d4d4d8' : '#a3e635',
+      todayWash: hexA('#a3e635',.16),
+    } : {
+      accentText:'#a3e635', pos:'#a3e635', neg:'#fb7185',
+      posChipBg:hexA('#a3e635',.14), negChipBg:hexA('#fb7185',.14),
+      cardStripeColor: lookB ? '#3a3a44' : '#a3e635',
+      todayWash: hexA('#a3e635',.05),
+    };
+    // neutral palette depends on MODE (+ graphite tint for Look B in dark)
+    let pal;
+    if(light){
+      pal = {
+        bg:'#f4f4f5', surface:'#ffffff', surface2:'#e4e4e7', sidebar:'#ffffff',
+        border:'#e4e4e7', borderHi:'#d4d4d8', text:'#18181b', dim:'#71717a', dimmer:'#a1a1aa',
+        rowHover:'#f4f4f5', tableHead:'#fafafa', headerBg:'rgba(255,255,255,.85)',
+        summaryBg:'linear-gradient(90deg,#f7fee7,#ffffff)', summaryBorder:'#d9f99d',
+        focusBg:'#ffffff', focusBorder:'#e4e4e7', dialogBg:'#ffffff',
+      };
+    } else if(lookB){
+      pal = {
+        bg:'#101012', surface:'#1a1a1e', surface2:'#26262c', sidebar:'#0b0b0d',
+        border:'#2c2c34', borderHi:'#3a3a44', text:'#f4f4f5', dim:'#8b8b96', dimmer:'#5c5c66',
+        rowHover:'#202026', tableHead:'#16161a', headerBg:'rgba(16,16,18,.85)',
+        summaryBg:'linear-gradient(90deg,#1c2110,#1a1a1e)', summaryBorder:'#39431d',
+        focusBg:'#1a1a1e', focusBorder:'#2c2c34', dialogBg:'#1a1a1e',
+      };
+    } else {
+      pal = {
+        bg:'#0a0a0a', surface:'#121212', surface2:'#1f1f1f', sidebar:'#0a0a0a',
+        border:'#1f1f1f', borderHi:'#333333', text:'#fafafa', dim:'#71717a', dimmer:'#52525b',
+        rowHover:'#161616', tableHead:'#0e0e0e', headerBg:'rgba(10,10,10,.85)',
+        summaryBg:'linear-gradient(90deg,#16180f,#121212)', summaryBorder:'#2a2e1c',
+        focusBg:'#121212', focusBorder:'#1f1f1f', dialogBg:'#141414',
+      };
+    }
+    return {...pal, ...struct, ...accent};
+  }
+
+  navTok(t, page){
+    const active = this.state.page===page;
+    const light = this.state.mode==='light';
+    if(active){
+      if(this.state.look==='B') return {bg:'#a3e635', fg:'#0a0a0a', bar:'0'};
+      return light ? {bg:'#e4e4e7', fg:'#18181b', bar:'1'} : {bg:'#1a1a1a', fg:'#fafafa', bar:'1'};
+    }
+    return {bg:'transparent', fg:t.dim, bar:'0'};
+  }
+
+  renderVals(){
+    const t = this.theme();
+    const s = this.state;
+    const lookA = s.look==='A', lookB = s.look==='B';
+    const light = s.mode==='light';
+    const sg=(v)=> v>0.05? t.pos : v<-0.05? t.neg : t.dim;
+    const typeText=(k)=> light ? TYPES[k].text : TYPES[k].color;
+
+    // metrics
+    const totals = s.rounds.map(r=>r.ott+r.app+r.arg+r.putt);
+    const avgTotal = totals.reduce((a,b)=>a+b,0)/(totals.length||1);
+    const mk=(label,value,unit,delta,sub,accent)=>{
+      const up=delta>=0; return {label,value,unit, delta:fmtSg(Math.abs(delta)).replace('+',''), arrow:up?'▲':'▼',
+        chipBg: up?t.posChipBg:t.negChipBg, chipFg: up?t.pos:t.neg, sub, accent};
+    };
+    const metrics=[
+      mk('Sessions','24','', 5,'this month','#a3e635'),
+      mk('Rounds','6','', 2,'last 30 days','#22d3ee'),
+      mk('Handicap','8.4','', -0.6,'trending down','#a3e635'),
+      mk('Avg SG','+'+avgTotal.toFixed(1),'', 1.2,'per round','#a3e635'),
+      mk('Fairways','62','%', 4,'hit / round','#f59e0b'),
+      mk('GIR','51','%', -3,'greens reg','#fb7185'),
+      mk('Putts','30.2','', -1.1,'per round','#c084fc'),
+      mk('Scoring','78.6','', -0.8,'avg score','#60a5fa'),
+    ];
+
+    // summary
+    const avg=(k)=> s.rounds.reduce((a,r)=>a+r[k],0)/(s.rounds.length||1);
+    const summary=[
+      {label:'Off Tee', value:fmtSg(avg('ott')), color:sg(avg('ott'))},
+      {label:'Approach', value:fmtSg(avg('app')), color:sg(avg('app'))},
+      {label:'Arnd Green', value:fmtSg(avg('arg')), color:sg(avg('arg'))},
+      {label:'Putting', value:fmtSg(avg('putt')), color:sg(avg('putt'))},
+      {label:'Total', value:fmtSg(avgTotal), color:t.accentText},
+    ];
+
+    // rows
+    const rows = s.rounds.map(r=>{
+      const editing = s.editingRowId===r.id;
+      const tot = r.ott+r.app+r.arg+r.putt;
+      const d = s.draft||{};
+      const dnum=(x)=>{const n=parseFloat(x);return isNaN(n)?0:n;};
+      const draftTotal = editing? fmtSg(dnum(d.ott)+dnum(d.app)+dnum(d.arg)+dnum(d.putt)) : '';
+      return {
+        ...r, editing, viewing:!editing,
+        ottStr:fmtSg(r.ott), appStr:fmtSg(r.app), argStr:fmtSg(r.arg), puttStr:fmtSg(r.putt), totalStr:fmtSg(tot),
+        ottColor:sg(r.ott), appColor:sg(r.app), argColor:sg(r.arg), puttColor:sg(r.putt), totalColor:(tot>0.05?t.pos:tot<-0.05?t.neg:t.text),
+        dOtt:d.ott, dApp:d.app, dArg:d.arg, dPutt:d.putt, draftTotal,
+        startEdit:()=>this.startEdit(r.id), save:()=>this.saveRow(r.id), cancel:this.cancelEdit, del:()=>this.delRow(r.id),
+        onOtt:(e)=>this.changeDraft('ott',e.target.value), onApp:(e)=>this.changeDraft('app',e.target.value),
+        onArg:(e)=>this.changeDraft('arg',e.target.value), onPutt:(e)=>this.changeDraft('putt',e.target.value),
+      };
+    });
+
+    // planner week
+    const sess=(type,title,notes)=>({type,title,notes,typeLabel:TYPES[type].label,color:TYPES[type].color,textColor:typeText(type),bg:hexA(TYPES[type].color,light?.16:.12),open:this.openAddSession});
+    const weekData=[
+      {dow:'Mon',num:'09',sessions:[sess('range','Driver tempo ladder','30 balls, alt targets'), sess('fit','Mobility + core','45 min')]},
+      {dow:'Tue',num:'10',sessions:[sess('short','Wedge matrix','60-80-100 yds')]},
+      {dow:'Wed',num:'11',sessions:[sess('putt','Gate drill','6ft circle, 20 makes'), sess('mental','Visualization','Pre-shot routine')]},
+      {dow:'Thu',num:'12',sessions:[],today:true},
+      {dow:'Fri',num:'13',sessions:[sess('range','Shot shaping','Draw / fade windows')]},
+      {dow:'Sat',num:'14',sessions:[sess('round','Pebble Beach','Full 18, track SG')]},
+      {dow:'Sun',num:'15',sessions:[sess('short','Bunker session','40 min'), sess('putt','Lag putting','30-50ft')]},
+    ];
+    const week = weekData.map(d=>({
+      ...d, colBg: d.today? t.todayWash : t.surface,
+      dowColor: d.today? t.accentText : t.dim, numColor: d.today? t.accentText : t.text,
+      todayDot: d.today? '1':'0',
+    }));
+
+    // month
+    const dowHeads=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const monthSessions={2:['range','fit'],3:['short'],5:['putt','mental'],8:['range'],9:['fit'],10:['round'],12:['short','putt'],15:['range'],16:['mental'],17:['round','short'],19:['putt'],22:['fit','range'],23:['short'],24:['round'],26:['putt'],29:['range','mental']};
+    const monthDays=[];
+    for(let i=0;i<35;i++){
+      const dayNum=i-2; const valid=dayNum>=1&&dayNum<=30;
+      const types=monthSessions[dayNum]||[];
+      const today=dayNum===12;
+      monthDays.push({
+        num: valid? String(dayNum):'', numColor: today?t.accentText:(valid?t.text:t.dimmer),
+        dots: types.map(ty=>TYPES[ty].color),
+        countLabel: types.length? (types.length+(types.length>1?' sessions':' session')) : '',
+        bg: today? t.todayWash : 'transparent',
+      });
+    }
+
+    // logged sessions
+    const lg=(day,mon,type,title,drills,duration)=>({day,mon,type,title,duration,typeLabel:TYPES[type].label,color:TYPES[type].color,textColor:typeText(type),bg:hexA(TYPES[type].color,light?.16:.12),drillLabel:drills});
+    const logged=[
+      lg('11','JUN','putt','Putting block','Gate drill · Lag ladder · 6ft circle','45 min'),
+      lg('10','JUN','short','Wedge matrix','60/80/100 yd · spin control','1h 10m'),
+      lg('09','JUN','range','Driver tempo','Ladder · shot shaping · 30 balls','55 min'),
+      lg('08','JUN','fit','Gym session','Mobility · rotational power · core','45 min'),
+      lg('06','JUN','round','Spyglass Hill','18 holes · SG tracked','4h 05m'),
+    ];
+
+    // dialog type picker
+    const typePicker = Object.keys(TYPES).map(k=>{
+      const sel = s.dlg.type===k;
+      return {key:k, short:TYPES[k].short, color:TYPES[k].color,
+        bg: sel? hexA(TYPES[k].color,light?.2:.16):t.bg, border: sel? TYPES[k].color:t.border, fg: sel? typeText(k) : t.text,
+        pick:()=>this.setDlg('type',k)};
+    });
+    const typeList = Object.keys(TYPES).map(k=>({label:TYPES[k].label,color:TYPES[k].color,glow:hexA(TYPES[k].color,.5)}));
+
+    const titles={dashboard:'Progress',planner:'Weekly Planner',sessions:'Session Logger',settings:'Settings'};
+    const today=new Date();
+    const todayStr = today.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+    return {
+      t, isLookA:lookA, isLookB:lookB,
+      tog:{ aBg: lookA?'#a3e635':'transparent', aFg: lookA?'#0a0a0a':'#71717a', bBg: lookB?'#a3e635':'transparent', bFg: lookB?'#0a0a0a':'#71717a' },
+      setLookA:this.setLookA, setLookB:this.setLookB,
+      setDark:this.setDark, setLight:this.setLight,
+      modeTog:{ darkBg: !light?'#a3e635':'transparent', darkFg: !light?'#0a0a0a':'#a1a1aa', lightBg: light?'#a3e635':'transparent', lightFg: light?'#0a0a0a':'#71717a' },
+      goDashboard:this.goDashboard, goPlanner:this.goPlanner, goSessions:this.goSessions, goSettings:this.goSettings,
+      nav:{ planner:this.navTok(t,'planner'), sessions:this.navTok(t,'sessions'), progress:this.navTok(t,'dashboard'), settings:this.navTok(t,'settings') },
+      pageTitle:titles[s.page], todayStr,
+      isDashboard:s.page==='dashboard', isPlanner:s.page==='planner', isSessions:s.page==='sessions', isSettings:s.page==='settings',
+      metrics, summary, showSummary:s.rounds.length>=2, rows,
+      openAddRound:this.openAddRound, openAddSession:this.openAddSession,
+      // planner
+      isWeek:s.plannerView==='week', isMonth:s.plannerView==='month',
+      pv:{ weekBg:s.plannerView==='week'?'#a3e635':'transparent', weekFg:s.plannerView==='week'?'#0a0a0a':t.dim, monthBg:s.plannerView==='month'?'#a3e635':'transparent', monthFg:s.plannerView==='month'?'#0a0a0a':t.dim },
+      setWeek:this.setWeek, setMonth:this.setMonth,
+      rangeLabel: s.plannerView==='week'?'Jun 9 – 15':'June 2025',
+      focus:s.focus, focusViewing:!s.focusEditing, focusEditing:s.focusEditing, focusDraft:s.focusDraft,
+      editFocus:this.editFocus, onFocusInput:this.onFocusInput, onFocusKey:this.onFocusKey, saveFocus:this.saveFocus,
+      week, dowHeads, monthDays,
+      logged, typeList,
+      // dialog
+      dialogOpen:!!s.dialog, isRoundDialog:s.dialog==='round', isSessionDialog:s.dialog==='session',
+      dialogTitle: s.dialog==='round'?'Add Round':'Add Session', dialogCta: s.dialog==='round'?'Save Round':'Add Session',
+      closeDialog:this.closeDialog, stop:this.stop, submitDialog:this.submitDialog, dlg:s.dlg, typePicker,
+      onDlgCourse:(e)=>this.setDlg('course',e.target.value), onDlgOtt:(e)=>this.setDlg('ott',e.target.value),
+      onDlgApp:(e)=>this.setDlg('app',e.target.value), onDlgArg:(e)=>this.setDlg('arg',e.target.value), onDlgPutt:(e)=>this.setDlg('putt',e.target.value),
+      onDlgTitle:(e)=>this.setDlg('title',e.target.value), onDlgNotes:(e)=>this.setDlg('notes',e.target.value),
+    };
+  }
+}
+</script>
+</body>
+</html>

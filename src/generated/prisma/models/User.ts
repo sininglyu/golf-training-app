@@ -228,6 +228,8 @@ export type UserWhereInput = {
   rounds?: Prisma.ShotsGainedListRelationFilter
   ghinCredential?: Prisma.XOR<Prisma.GhinCredentialNullableScalarRelationFilter, Prisma.GhinCredentialWhereInput> | null
   handicapEntries?: Prisma.HandicapEntryListRelationFilter
+  weeklyFocuses?: Prisma.WeeklyFocusListRelationFilter
+  goals?: Prisma.GoalListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -241,6 +243,8 @@ export type UserOrderByWithRelationInput = {
   rounds?: Prisma.ShotsGainedOrderByRelationAggregateInput
   ghinCredential?: Prisma.GhinCredentialOrderByWithRelationInput
   handicapEntries?: Prisma.HandicapEntryOrderByRelationAggregateInput
+  weeklyFocuses?: Prisma.WeeklyFocusOrderByRelationAggregateInput
+  goals?: Prisma.GoalOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -257,6 +261,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   rounds?: Prisma.ShotsGainedListRelationFilter
   ghinCredential?: Prisma.XOR<Prisma.GhinCredentialNullableScalarRelationFilter, Prisma.GhinCredentialWhereInput> | null
   handicapEntries?: Prisma.HandicapEntryListRelationFilter
+  weeklyFocuses?: Prisma.WeeklyFocusListRelationFilter
+  goals?: Prisma.GoalListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -296,6 +302,8 @@ export type UserCreateInput = {
   rounds?: Prisma.ShotsGainedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialCreateNestedOneWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -309,6 +317,8 @@ export type UserUncheckedCreateInput = {
   rounds?: Prisma.ShotsGainedUncheckedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialUncheckedCreateNestedOneWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryUncheckedCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -322,6 +332,8 @@ export type UserUpdateInput = {
   rounds?: Prisma.ShotsGainedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUpdateOneWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -335,6 +347,8 @@ export type UserUncheckedUpdateInput = {
   rounds?: Prisma.ShotsGainedUncheckedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUncheckedUpdateOneWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUncheckedUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -480,6 +494,34 @@ export type UserUpdateOneRequiredWithoutHandicapEntriesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutHandicapEntriesInput, Prisma.UserUpdateWithoutHandicapEntriesInput>, Prisma.UserUncheckedUpdateWithoutHandicapEntriesInput>
 }
 
+export type UserCreateNestedOneWithoutWeeklyFocusesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWeeklyFocusesInput, Prisma.UserUncheckedCreateWithoutWeeklyFocusesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWeeklyFocusesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutWeeklyFocusesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutWeeklyFocusesInput, Prisma.UserUncheckedCreateWithoutWeeklyFocusesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutWeeklyFocusesInput
+  upsert?: Prisma.UserUpsertWithoutWeeklyFocusesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutWeeklyFocusesInput, Prisma.UserUpdateWithoutWeeklyFocusesInput>, Prisma.UserUncheckedUpdateWithoutWeeklyFocusesInput>
+}
+
+export type UserCreateNestedOneWithoutGoalsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoalsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutGoalsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutGoalsInput
+  upsert?: Prisma.UserUpsertWithoutGoalsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGoalsInput, Prisma.UserUpdateWithoutGoalsInput>, Prisma.UserUncheckedUpdateWithoutGoalsInput>
+}
+
 export type UserCreateWithoutWeeklySessionsInput = {
   id?: string
   email: string
@@ -490,6 +532,8 @@ export type UserCreateWithoutWeeklySessionsInput = {
   rounds?: Prisma.ShotsGainedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialCreateNestedOneWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWeeklySessionsInput = {
@@ -502,6 +546,8 @@ export type UserUncheckedCreateWithoutWeeklySessionsInput = {
   rounds?: Prisma.ShotsGainedUncheckedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialUncheckedCreateNestedOneWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryUncheckedCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWeeklySessionsInput = {
@@ -530,6 +576,8 @@ export type UserUpdateWithoutWeeklySessionsInput = {
   rounds?: Prisma.ShotsGainedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUpdateOneWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWeeklySessionsInput = {
@@ -542,6 +590,8 @@ export type UserUncheckedUpdateWithoutWeeklySessionsInput = {
   rounds?: Prisma.ShotsGainedUncheckedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUncheckedUpdateOneWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUncheckedUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRoundsInput = {
@@ -554,6 +604,8 @@ export type UserCreateWithoutRoundsInput = {
   weeklySessions?: Prisma.WeeklySessionCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialCreateNestedOneWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRoundsInput = {
@@ -566,6 +618,8 @@ export type UserUncheckedCreateWithoutRoundsInput = {
   weeklySessions?: Prisma.WeeklySessionUncheckedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialUncheckedCreateNestedOneWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryUncheckedCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRoundsInput = {
@@ -594,6 +648,8 @@ export type UserUpdateWithoutRoundsInput = {
   weeklySessions?: Prisma.WeeklySessionUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUpdateOneWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRoundsInput = {
@@ -606,6 +662,8 @@ export type UserUncheckedUpdateWithoutRoundsInput = {
   weeklySessions?: Prisma.WeeklySessionUncheckedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUncheckedUpdateOneWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUncheckedUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGhinCredentialInput = {
@@ -618,6 +676,8 @@ export type UserCreateWithoutGhinCredentialInput = {
   weeklySessions?: Prisma.WeeklySessionCreateNestedManyWithoutUserInput
   rounds?: Prisma.ShotsGainedCreateNestedManyWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGhinCredentialInput = {
@@ -630,6 +690,8 @@ export type UserUncheckedCreateWithoutGhinCredentialInput = {
   weeklySessions?: Prisma.WeeklySessionUncheckedCreateNestedManyWithoutUserInput
   rounds?: Prisma.ShotsGainedUncheckedCreateNestedManyWithoutUserInput
   handicapEntries?: Prisma.HandicapEntryUncheckedCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGhinCredentialInput = {
@@ -658,6 +720,8 @@ export type UserUpdateWithoutGhinCredentialInput = {
   weeklySessions?: Prisma.WeeklySessionUpdateManyWithoutUserNestedInput
   rounds?: Prisma.ShotsGainedUpdateManyWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGhinCredentialInput = {
@@ -670,6 +734,8 @@ export type UserUncheckedUpdateWithoutGhinCredentialInput = {
   weeklySessions?: Prisma.WeeklySessionUncheckedUpdateManyWithoutUserNestedInput
   rounds?: Prisma.ShotsGainedUncheckedUpdateManyWithoutUserNestedInput
   handicapEntries?: Prisma.HandicapEntryUncheckedUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutHandicapEntriesInput = {
@@ -682,6 +748,8 @@ export type UserCreateWithoutHandicapEntriesInput = {
   weeklySessions?: Prisma.WeeklySessionCreateNestedManyWithoutUserInput
   rounds?: Prisma.ShotsGainedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialCreateNestedOneWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutHandicapEntriesInput = {
@@ -694,6 +762,8 @@ export type UserUncheckedCreateWithoutHandicapEntriesInput = {
   weeklySessions?: Prisma.WeeklySessionUncheckedCreateNestedManyWithoutUserInput
   rounds?: Prisma.ShotsGainedUncheckedCreateNestedManyWithoutUserInput
   ghinCredential?: Prisma.GhinCredentialUncheckedCreateNestedOneWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutHandicapEntriesInput = {
@@ -722,6 +792,8 @@ export type UserUpdateWithoutHandicapEntriesInput = {
   weeklySessions?: Prisma.WeeklySessionUpdateManyWithoutUserNestedInput
   rounds?: Prisma.ShotsGainedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUpdateOneWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutHandicapEntriesInput = {
@@ -734,6 +806,152 @@ export type UserUncheckedUpdateWithoutHandicapEntriesInput = {
   weeklySessions?: Prisma.WeeklySessionUncheckedUpdateManyWithoutUserNestedInput
   rounds?: Prisma.ShotsGainedUncheckedUpdateManyWithoutUserNestedInput
   ghinCredential?: Prisma.GhinCredentialUncheckedUpdateOneWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutWeeklyFocusesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  handicap?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  weeklySessions?: Prisma.WeeklySessionCreateNestedManyWithoutUserInput
+  rounds?: Prisma.ShotsGainedCreateNestedManyWithoutUserInput
+  ghinCredential?: Prisma.GhinCredentialCreateNestedOneWithoutUserInput
+  handicapEntries?: Prisma.HandicapEntryCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutWeeklyFocusesInput = {
+  id?: string
+  email: string
+  name?: string | null
+  handicap?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  weeklySessions?: Prisma.WeeklySessionUncheckedCreateNestedManyWithoutUserInput
+  rounds?: Prisma.ShotsGainedUncheckedCreateNestedManyWithoutUserInput
+  ghinCredential?: Prisma.GhinCredentialUncheckedCreateNestedOneWithoutUserInput
+  handicapEntries?: Prisma.HandicapEntryUncheckedCreateNestedManyWithoutUserInput
+  goals?: Prisma.GoalUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutWeeklyFocusesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutWeeklyFocusesInput, Prisma.UserUncheckedCreateWithoutWeeklyFocusesInput>
+}
+
+export type UserUpsertWithoutWeeklyFocusesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutWeeklyFocusesInput, Prisma.UserUncheckedUpdateWithoutWeeklyFocusesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutWeeklyFocusesInput, Prisma.UserUncheckedCreateWithoutWeeklyFocusesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutWeeklyFocusesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutWeeklyFocusesInput, Prisma.UserUncheckedUpdateWithoutWeeklyFocusesInput>
+}
+
+export type UserUpdateWithoutWeeklyFocusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handicap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklySessions?: Prisma.WeeklySessionUpdateManyWithoutUserNestedInput
+  rounds?: Prisma.ShotsGainedUpdateManyWithoutUserNestedInput
+  ghinCredential?: Prisma.GhinCredentialUpdateOneWithoutUserNestedInput
+  handicapEntries?: Prisma.HandicapEntryUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutWeeklyFocusesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handicap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklySessions?: Prisma.WeeklySessionUncheckedUpdateManyWithoutUserNestedInput
+  rounds?: Prisma.ShotsGainedUncheckedUpdateManyWithoutUserNestedInput
+  ghinCredential?: Prisma.GhinCredentialUncheckedUpdateOneWithoutUserNestedInput
+  handicapEntries?: Prisma.HandicapEntryUncheckedUpdateManyWithoutUserNestedInput
+  goals?: Prisma.GoalUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutGoalsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  handicap?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  weeklySessions?: Prisma.WeeklySessionCreateNestedManyWithoutUserInput
+  rounds?: Prisma.ShotsGainedCreateNestedManyWithoutUserInput
+  ghinCredential?: Prisma.GhinCredentialCreateNestedOneWithoutUserInput
+  handicapEntries?: Prisma.HandicapEntryCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutGoalsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  handicap?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  weeklySessions?: Prisma.WeeklySessionUncheckedCreateNestedManyWithoutUserInput
+  rounds?: Prisma.ShotsGainedUncheckedCreateNestedManyWithoutUserInput
+  ghinCredential?: Prisma.GhinCredentialUncheckedCreateNestedOneWithoutUserInput
+  handicapEntries?: Prisma.HandicapEntryUncheckedCreateNestedManyWithoutUserInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutGoalsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>
+}
+
+export type UserUpsertWithoutGoalsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutGoalsInput, Prisma.UserUncheckedUpdateWithoutGoalsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutGoalsInput, Prisma.UserUncheckedCreateWithoutGoalsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutGoalsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutGoalsInput, Prisma.UserUncheckedUpdateWithoutGoalsInput>
+}
+
+export type UserUpdateWithoutGoalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handicap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklySessions?: Prisma.WeeklySessionUpdateManyWithoutUserNestedInput
+  rounds?: Prisma.ShotsGainedUpdateManyWithoutUserNestedInput
+  ghinCredential?: Prisma.GhinCredentialUpdateOneWithoutUserNestedInput
+  handicapEntries?: Prisma.HandicapEntryUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutGoalsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  handicap?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  weeklySessions?: Prisma.WeeklySessionUncheckedUpdateManyWithoutUserNestedInput
+  rounds?: Prisma.ShotsGainedUncheckedUpdateManyWithoutUserNestedInput
+  ghinCredential?: Prisma.GhinCredentialUncheckedUpdateOneWithoutUserNestedInput
+  handicapEntries?: Prisma.HandicapEntryUncheckedUpdateManyWithoutUserNestedInput
+  weeklyFocuses?: Prisma.WeeklyFocusUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -745,12 +963,16 @@ export type UserCountOutputType = {
   weeklySessions: number
   rounds: number
   handicapEntries: number
+  weeklyFocuses: number
+  goals: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   weeklySessions?: boolean | UserCountOutputTypeCountWeeklySessionsArgs
   rounds?: boolean | UserCountOutputTypeCountRoundsArgs
   handicapEntries?: boolean | UserCountOutputTypeCountHandicapEntriesArgs
+  weeklyFocuses?: boolean | UserCountOutputTypeCountWeeklyFocusesArgs
+  goals?: boolean | UserCountOutputTypeCountGoalsArgs
 }
 
 /**
@@ -784,6 +1006,20 @@ export type UserCountOutputTypeCountHandicapEntriesArgs<ExtArgs extends runtime.
   where?: Prisma.HandicapEntryWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountWeeklyFocusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WeeklyFocusWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountGoalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.GoalWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -796,6 +1032,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   rounds?: boolean | Prisma.User$roundsArgs<ExtArgs>
   ghinCredential?: boolean | Prisma.User$ghinCredentialArgs<ExtArgs>
   handicapEntries?: boolean | Prisma.User$handicapEntriesArgs<ExtArgs>
+  weeklyFocuses?: boolean | Prisma.User$weeklyFocusesArgs<ExtArgs>
+  goals?: boolean | Prisma.User$goalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -832,6 +1070,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   rounds?: boolean | Prisma.User$roundsArgs<ExtArgs>
   ghinCredential?: boolean | Prisma.User$ghinCredentialArgs<ExtArgs>
   handicapEntries?: boolean | Prisma.User$handicapEntriesArgs<ExtArgs>
+  weeklyFocuses?: boolean | Prisma.User$weeklyFocusesArgs<ExtArgs>
+  goals?: boolean | Prisma.User$goalsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -844,6 +1084,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     rounds: Prisma.$ShotsGainedPayload<ExtArgs>[]
     ghinCredential: Prisma.$GhinCredentialPayload<ExtArgs> | null
     handicapEntries: Prisma.$HandicapEntryPayload<ExtArgs>[]
+    weeklyFocuses: Prisma.$WeeklyFocusPayload<ExtArgs>[]
+    goals: Prisma.$GoalPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1250,6 +1492,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   rounds<T extends Prisma.User$roundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$roundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShotsGainedPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   ghinCredential<T extends Prisma.User$ghinCredentialArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ghinCredentialArgs<ExtArgs>>): Prisma.Prisma__GhinCredentialClient<runtime.Types.Result.GetResult<Prisma.$GhinCredentialPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   handicapEntries<T extends Prisma.User$handicapEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$handicapEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$HandicapEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  weeklyFocuses<T extends Prisma.User$weeklyFocusesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$weeklyFocusesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WeeklyFocusPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  goals<T extends Prisma.User$goalsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$goalsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GoalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1764,6 +2008,54 @@ export type User$handicapEntriesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.HandicapEntryScalarFieldEnum | Prisma.HandicapEntryScalarFieldEnum[]
+}
+
+/**
+ * User.weeklyFocuses
+ */
+export type User$weeklyFocusesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WeeklyFocus
+   */
+  select?: Prisma.WeeklyFocusSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WeeklyFocus
+   */
+  omit?: Prisma.WeeklyFocusOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WeeklyFocusInclude<ExtArgs> | null
+  where?: Prisma.WeeklyFocusWhereInput
+  orderBy?: Prisma.WeeklyFocusOrderByWithRelationInput | Prisma.WeeklyFocusOrderByWithRelationInput[]
+  cursor?: Prisma.WeeklyFocusWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WeeklyFocusScalarFieldEnum | Prisma.WeeklyFocusScalarFieldEnum[]
+}
+
+/**
+ * User.goals
+ */
+export type User$goalsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Goal
+   */
+  select?: Prisma.GoalSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Goal
+   */
+  omit?: Prisma.GoalOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.GoalInclude<ExtArgs> | null
+  where?: Prisma.GoalWhereInput
+  orderBy?: Prisma.GoalOrderByWithRelationInput | Prisma.GoalOrderByWithRelationInput[]
+  cursor?: Prisma.GoalWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.GoalScalarFieldEnum | Prisma.GoalScalarFieldEnum[]
 }
 
 /**

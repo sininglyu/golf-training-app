@@ -1,5 +1,8 @@
 import type {
   ExerciseSet,
+  Goal,
+  GoalCategory,
+  GoalStatus,
   PlannerSession,
   SessionLog,
   SessionType,
@@ -83,5 +86,31 @@ export function serializeSession(session: RawSession): PlannerSession {
     title: session.title,
     focus: session.focus,
     log: session.log ? serializeLog(session.log) : null,
+  };
+}
+
+interface RawGoal {
+  id: string;
+  userId: string;
+  title: string;
+  description: string | null;
+  category: string;
+  targetDate: string | null;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export function serializeGoal(goal: RawGoal): Goal {
+  return {
+    id: goal.id,
+    userId: goal.userId,
+    title: goal.title,
+    description: goal.description,
+    category: goal.category as GoalCategory,
+    targetDate: goal.targetDate,
+    status: goal.status as GoalStatus,
+    createdAt: goal.createdAt.toISOString(),
+    updatedAt: goal.updatedAt.toISOString(),
   };
 }

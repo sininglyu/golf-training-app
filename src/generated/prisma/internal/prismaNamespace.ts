@@ -389,7 +389,9 @@ export const ModelName = {
   SessionLog: 'SessionLog',
   ShotsGained: 'ShotsGained',
   GhinCredential: 'GhinCredential',
-  HandicapEntry: 'HandicapEntry'
+  HandicapEntry: 'HandicapEntry',
+  WeeklyFocus: 'WeeklyFocus',
+  Goal: 'Goal'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "weeklySession" | "sessionLog" | "shotsGained" | "ghinCredential" | "handicapEntry"
+    modelProps: "user" | "weeklySession" | "sessionLog" | "shotsGained" | "ghinCredential" | "handicapEntry" | "weeklyFocus" | "goal"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +855,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WeeklyFocus: {
+      payload: Prisma.$WeeklyFocusPayload<ExtArgs>
+      fields: Prisma.WeeklyFocusFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WeeklyFocusFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WeeklyFocusFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>
+        }
+        findFirst: {
+          args: Prisma.WeeklyFocusFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WeeklyFocusFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>
+        }
+        findMany: {
+          args: Prisma.WeeklyFocusFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>[]
+        }
+        create: {
+          args: Prisma.WeeklyFocusCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>
+        }
+        createMany: {
+          args: Prisma.WeeklyFocusCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.WeeklyFocusCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>[]
+        }
+        delete: {
+          args: Prisma.WeeklyFocusDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>
+        }
+        update: {
+          args: Prisma.WeeklyFocusUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>
+        }
+        deleteMany: {
+          args: Prisma.WeeklyFocusDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.WeeklyFocusUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.WeeklyFocusUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>[]
+        }
+        upsert: {
+          args: Prisma.WeeklyFocusUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WeeklyFocusPayload>
+        }
+        aggregate: {
+          args: Prisma.WeeklyFocusAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWeeklyFocus>
+        }
+        groupBy: {
+          args: Prisma.WeeklyFocusGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WeeklyFocusGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WeeklyFocusCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WeeklyFocusCountAggregateOutputType> | number
+        }
+      }
+    }
+    Goal: {
+      payload: Prisma.$GoalPayload<ExtArgs>
+      fields: Prisma.GoalFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.GoalFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.GoalFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>
+        }
+        findFirst: {
+          args: Prisma.GoalFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.GoalFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>
+        }
+        findMany: {
+          args: Prisma.GoalFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>[]
+        }
+        create: {
+          args: Prisma.GoalCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>
+        }
+        createMany: {
+          args: Prisma.GoalCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.GoalCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>[]
+        }
+        delete: {
+          args: Prisma.GoalDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>
+        }
+        update: {
+          args: Prisma.GoalUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>
+        }
+        deleteMany: {
+          args: Prisma.GoalDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.GoalUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.GoalUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>[]
+        }
+        upsert: {
+          args: Prisma.GoalUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$GoalPayload>
+        }
+        aggregate: {
+          args: Prisma.GoalAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateGoal>
+        }
+        groupBy: {
+          args: Prisma.GoalGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GoalGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.GoalCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.GoalCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -984,6 +1134,33 @@ export const HandicapEntryScalarFieldEnum = {
 } as const
 
 export type HandicapEntryScalarFieldEnum = (typeof HandicapEntryScalarFieldEnum)[keyof typeof HandicapEntryScalarFieldEnum]
+
+
+export const WeeklyFocusScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  weekOf: 'weekOf',
+  text: 'text',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WeeklyFocusScalarFieldEnum = (typeof WeeklyFocusScalarFieldEnum)[keyof typeof WeeklyFocusScalarFieldEnum]
+
+
+export const GoalScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  category: 'category',
+  targetDate: 'targetDate',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type GoalScalarFieldEnum = (typeof GoalScalarFieldEnum)[keyof typeof GoalScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1165,6 +1342,8 @@ export type GlobalOmitConfig = {
   shotsGained?: Prisma.ShotsGainedOmit
   ghinCredential?: Prisma.GhinCredentialOmit
   handicapEntry?: Prisma.HandicapEntryOmit
+  weeklyFocus?: Prisma.WeeklyFocusOmit
+  goal?: Prisma.GoalOmit
 }
 
 /* Types for Logging */

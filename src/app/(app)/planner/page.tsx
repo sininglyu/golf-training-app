@@ -42,6 +42,7 @@ import { AddSessionDialog } from "@/features/planner/components/add-session-dial
 import { DayColumn } from "@/features/planner/components/day-column";
 import { LogSessionDialog } from "@/features/planner/components/log-session-dialog";
 import { MonthGrid } from "@/features/planner/components/month-grid";
+import { WeeklyFocusBanner } from "@/features/planner/components/weekly-focus-banner";
 import type { PlannerSession, SessionType } from "@/types";
 
 type PlannerView = "week" | "month";
@@ -384,6 +385,8 @@ export default function PlannerPage() {
           </Button>
         </div>
       ) : null}
+
+      {view === "week" ? <WeeklyFocusBanner weekOf={weekOf} /> : null}
 
       {view === "week" ? (
         <div className="rounded-xl border-2 border-border bg-muted/50 p-2 shadow-sm sm:p-3">

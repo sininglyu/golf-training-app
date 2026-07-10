@@ -47,3 +47,13 @@ export type GhinCredential = Prisma.GhinCredentialModel
  * 
  */
 export type HandicapEntry = Prisma.HandicapEntryModel
+/**
+ * Model WeeklyFocus
+ * 
+ */
+export type WeeklyFocus = Prisma.WeeklyFocusModel
+/**
+ * Model Goal
+ * 
+ */
+export type Goal = Prisma.GoalModel
